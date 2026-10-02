@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I'm Sorry, Mae</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; width:100%; min-height:100%; font-family: Georgia, serif; }
+  body { overflow:hidden; background:#f5eee7; color:#241f1c; }
+
+  .page {
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity 900ms ease, transform 900ms ease;
+  }
+  .hidden { display:none !important; }
+
+  /* OPEN */
+  #openPage {
+    flex-direction:column;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.75), transparent 35%),
+      radial-gradient(circle at 80% 75%, rgba(221,191,172,.35), transparent 35%),
+      #f5eee7;
+  }
+  #openPage h1 {
+    font-size:clamp(42px,9vw,82px);
+    font-weight:400;
+    margin:0 0 26px;
+    letter-spacing:-2px;
+  }
+  .sub { font:14px Arial,sans-serif; letter-spacing:3px; text-transform:uppercase; opacity:.55; margin-bottom:32px; }
+  button {
+    border:0; border-radius:999px; padding:15px 34px;
+    background:#211e1c; color:#fff; font-size:16px;
+    cursor:pointer; transition:transform .2s, box-shadow .2s;
+  }
+  button:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 10px 25px rgba(0,0,0,.2); }
+
+  /* LETTER */
+  #letterPage { background:#e8ddd3; padding:22px; }
+  .letter {
+    width:min(560px,92vw); background:#fffdf9;
+    padding:clamp(28px,6vw,58px);
+    box-shadow:0 25px 70px rgba(46,31,22,.18);
+    transform:rotate(-1deg);
+    animation:paperIn 900ms ease both;
+  }
+  @keyframes paperIn {
+    from { opacity:0; transform:translateY(45px) rotate(-5deg); }
+    to { opacity:1; transform:translateY(0) rotate(-1deg); }
+  }
+  .letter h2 { font-size:clamp(36px,8vw,54px); font-weight:400; margin:0 0 25px; }
+  .letter p { font-size:clamp(17px,3.5vw,20px); line-height:1.8; margin:0; }
+  .letter .action { margin-top:30px; }
+
+  /* LYRIC VIDEO */
+  #videoPage {
+    background:#070707; color:white; overflow:hidden;
+    flex-direction:column;
+  }
+  #videoPage::before {
+    content:""; position:absolute; inset:-20%;
+    background:
+      radial-gradient(circle at 25% 35%, rgba(255,180,150,.14), transparent 25%),
+      radial-gradient(circle at 75% 65%, rgba(150,180,255,.12), transparent 25%);
+    filter:blur(20px);
+    animation:ambient 9s ease-in-out infinite alternate;
+  }
+  @keyframes ambient { to { transform:scale(1.18) rotate(4deg); } }
+
+  .orb {
+    position:absolute; width:36vw; height:36vw; max-width:420px; max-height:420px;
+    border-radius:50%; border:1px solid rgba(255,255,255,.08);
+    animation:orb 8s ease-in-out infinite;
+  }
+  @keyframes orb { 50% { transform:scale(1.18); opacity:.45; } }
+
+  .lyrics {
+    position:relative; z-index:2; width:min(1000px,92vw);
+    height:210px; display:flex; align-items:center; justify-content:center;
+    text-align:center;
+  }
+  #lyric {
+    position:absolute; width:100%;
+    font-size:clamp(30px,7vw,76px); line-height:1.08;
+    font-weight:400; letter-spacing:-1px;
+    text-shadow:0 5px 30px rgba(0,0,0,.45);
+  }
+  .fade { animation:fadeInOut 3.2s ease both; }
+  .slide { animation:slideInOut 3.2s ease both; }
+  .zoom { animation:zoomInOut 3.2s ease both; }
+  .rise { animation:riseInOut 3.2s cubic-bezier(.2,.8,.2,1) both; }
+
+  @keyframes fadeInOut {
+    0%{opacity:0;transform:scale(.82)} 18%{opacity:1;transform:scale(1)}
+    78%{opacity:1} 100%{opacity:0;transform:translateY(-35px) scale(1.06)}
+  }
+  @keyframes slideInOut {
+    0%{opacity:0;transform:translateX(100vw) rotate(3deg)}
+    18%{opacity:1;transform:translateX(0) rotate(0)}
+    78%{opacity:1} 100%{opacity:0;transform:translateX(-100vw) rotate(-3deg)}
+  }
+  @keyframes zoomInOut {
+    0%{opacity:0;transform:scale(2.2)} 20%{opacity:1;transform:scale(1)}
+    78%{opacity:1} 100%{opacity:0;transform:scale(.65)}
+  }
+  @keyframes riseInOut {
+    0%{opacity:0;transform:translateY(90px);filter:blur(12px)}
+    22%{opacity:1;transform:translateY(0);filter:blur(0)}
+    78%{opacity:1} 100%{opacity:0;transform:translateY(-70px);filter:blur(8px)}
+  }
+
+  .top {
+    position:absolute; top:22px; left:22px; right:22px;
+    display:flex; justify-content:space-between; align-items:center;
+    z-index:5; font:12px Arial,sans-serif; letter-spacing:2px;
+    opacity:.65;
+  }
+  .musicBtn { padding:10px 17px; font-size:12px; background:rgba(255,255,255,.12); backdrop-filter:blur(10px); }
+  .progress {
+    position:absolute; left:0; bottom:0; height:3px; width:0;
+    background:#fff; z-index:5;
+  }
+  .hint {
+    position:absolute; bottom:28px; z-index:4;
+    font:12px Arial,sans-serif; letter-spacing:2px; opacity:.45;
+  }
+
+  /* Audio file picker */
+  #audioInput { display:none; }
+  .picker {
+    position:absolute; bottom:60px; z-index:10;
+    font:12px Arial,sans-serif; letter-spacing:1px;
+    opacity:.7;
+  }
+  .picker label { cursor:pointer; text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<section id="openPage" class="page">
+  <div class="sub">a little something for you</div>
+  <h1>Open it.</h1>
+  <button onclick="openLetter()">Open</button>
+</section>
+
+<section id="letterPage" class="page hidden">
+  <div class="letter">
+    <h2>I'm sorry, Maee.</h2>
+    <p>
+      I know I made mistakes.<br><br>
+      I made this little page because sometimes
+      an apology is easier to say when you put it into words.
+    </p>
+    <div class="action">
+      <button onclick="startVideo()">Click here</button>
+    </div>
+  </div>
+</section>
+
+<section id="videoPage" class="page hidden">
+  <div class="top">
+    <span>FOR MAE</span>
+    <button class="musicBtn" onclick="toggleMusic()">♫ Music</button>
+  </div>
+
+  <div class="orb"></div>
+
+  <div class="lyrics">
+    <div id="lyric"></div>
+  </div>
+
+  <div class="picker">
+    <label for="audioInput">Choose your own licensed audio file</label>
+    <input id="audioInput" type="file" accept="audio/*">
+  </div>
+
+  <div class="hint">♪ playing your selected audio</div>
+  <div id="progress" class="progress"></div>
+</section>
+
+<audio id="audio" preload="auto"></audio>
+
+<script>
+const openPage = document.getElementById("openPage");
+const letterPage = document.getElementById("letterPage");
+const videoPage = document.getElementById("videoPage");
+const lyric = document.getElementById("lyric");
+const audio = document.getElementById("audio");
+const progress = document.getElementById("progress");
+const audioInput = document.getElementById("audioInput");
+
+/*
+  Put only lyrics you have permission to use here.
+  I can't provide or embed the copyrighted chorus of
+  "You'll Be Safe Here" by Addie.
+
+  You can replace these placeholders with your own text
+  or lyrics you are authorized to use.
+*/
+const lines = [
+  "YOUR CHORUS LINE 1",
+  "YOUR CHORUS LINE 2",
+  "YOUR CHORUS LINE 3",
+  "YOUR CHORUS LINE 4",
+  "YOUR CHORUS LINE 5",
+  "YOUR CHORUS LINE 6"
+];
+
+let current = 0;
+let timer = null;
+let playing = false;
+
+function openLetter() {
+  openPage.style.opacity = "0";
+  openPage.style.transform = "scale(1.04)";
+  setTimeout(() => {
+    openPage.classList.add("hidden");
+    letterPage.classList.remove("hidden");
+    requestAnimationFrame(() => letterPage.style.opacity = "1");
+  }, 850);
+}
+
+function startVideo() {
+  letterPage.style.opacity = "0";
+  setTimeout(() => {
+    letterPage.classList.add("hidden");
+    videoPage.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      videoPage.style.opacity = "1";
+      startLyrics();
+      if (audio.src) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+    });
+  }, 850);
+}
+
+function startLyrics() {
+  clearTimeout(timer);
+  showLyric();
+}
+
+function showLyric() {
+  lyric.className = "";
+  void lyric.offsetWidth;
+  lyric.textContent = lines[current];
+
+  const effects = ["fade", "slide", "zoom", "rise"];
+  lyric.classList.add(effects[current % effects.length]);
+
+  current = (current + 1) % lines.length;
+  timer = setTimeout(showLyric, 3200);
+}
+
+function toggleMusic() {
+  if (!audio.src) {
+    audioInput.click();
+    return;
+  }
+  if (audio.paused) audio.play().catch(() => {});
+  else audio.pause();
+}
+
+audioInput.addEventListener("change", () => {
+  const file = audioInput.files[0];
+  if (!file) return;
+  audio.src = URL.createObjectURL(file);
+  audio.play().catch(() => {});
+});
+
+audio.addEventListener("timeupdate", () => {
+  if (audio.duration) {
+    progress.style.width = (audio.currentTime / audio.duration * 100) + "%";
+  }
+});
+
+audio.addEventListener("play", () => playing = true);
+audio.addEventListener("pause", () => playing = false);
+</script>
+</body>
+</html>
