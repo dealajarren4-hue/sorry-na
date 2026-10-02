@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>I'm Sorry</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+
+/* OPEN PAGE */
+
+#openPage {
+  width: 100%;
+  height: 100vh;
+  background: #f4eee6;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  transition: 1s;
+}
+
+#openPage h1 {
+  font-family: Georgia, serif;
+  font-size: 42px;
+  font-weight: normal;
+}
+
+button {
+  background: #222;
+  color: white;
+  border: none;
+
+  padding: 14px 30px;
+
+  font-size: 16px;
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+
+/* LETTER */
+
+#letterPage {
+  width: 100%;
+  height: 100vh;
+
+  background: #e8e0d6;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+
+  transition: 1s;
+}
+
+.letter {
+  width: 500px;
+  max-width: 88%;
+
+  background: #fffdf8;
+
+  padding: 45px;
+
+  box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+
+  animation: letterIn 1s ease;
+}
+
+.letter h1 {
+  font-family: Georgia, serif;
+  font-size: 38px;
+  font-weight: normal;
+}
+
+.letter p {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.letter button {
+  margin-top: 20px;
+}
+
+
+@keyframes letterIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotate(-2deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-1deg);
+  }
+
+}
+
+
+/* LYRIC VIDEO */
+
+#videoPage {
+
+  width: 100%;
+  height: 100vh;
+
+  background: #050505;
+
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+
+  opacity: 0;
+
+  transition: 1.5s;
+}
+
+
+/* BACKGROUND */
+
+.backgroundText {
+
+  position: absolute;
+
+  font-size: 15vw;
+
+  font-weight: bold;
+
+  color: rgba(255,255,255,0.03);
+
+  white-space: nowrap;
+
+  animation: moveBackground 12s linear infinite;
+
+}
+
+
+@keyframes moveBackground {
+
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+
+}
+
+
+/* LYRICS */
+
+.lyrics {
+
+  position: relative;
+
+  width: 90%;
+  max-width: 900px;
+
+  text-align: center;
+
+  z-index: 2;
+
+}
+
+
+.lyric {
+
+  position: absolute;
+
+  width: 100%;
+
+  left: 0;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  font-size: clamp(25px, 5vw, 65px);
+
+  font-family: Georgia, serif;
+
+  opacity: 0;
+
+}
+
+
+/* ANIMATION TYPES */
+
+.fade {
+
+  animation: fadeLyrics 3s ease forwards;
+
+}
+
+
+@keyframes fadeLyrics {
+
+  0% {
+    opacity: 0;
+    transform: translateY(-30%) scale(0.8);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-70%) scale(1.1);
+  }
+
+}
+
+
+.slide {
+
+  animation: slideLyrics 3s ease forwards;
+
+}
+
+
+@keyframes slideLyrics {
+
+  0% {
+    opacity: 0;
+    transform: translate(-100%, -50%);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(100%, -50%);
+  }
+
+}
+
+
+.zoom {
+
+  animation: zoomLyrics 3s ease forwards;
+
+}
+
+
+@keyframes zoomLyrics {
+
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(2);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+
+}
+
+
+/* MUSIC */
+
+.music {
+
+  position: absolute;
+
+  bottom: 25px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: #888;
+
+  font-size: 13px;
+
+  letter-spacing: 2px;
+
+}
+
+
+/* HIDDEN */
+
+.hidden {
+  display: none;
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- OPEN -->
+
+<section id="openPage">
+
+  <h1>Open it</h1>
+
+  <button onclick="openLetter()">
+    Open
+  </button>
+
+</section>
+
+
+
+<!-- LETTER -->
+
+<section id="letterPage" class="hidden">
+
+  <div class="letter">
+
+    <h1>I'm sorry.</h1>
+
+    <p>
+      I know I made mistakes.
+      <br><br>
+
+      I made this little website
+      just to say that I'm sorry.
+    </p>
+
+    <button onclick="startVideo()">
+      Click here
+    </button>
+
+  </div>
+
+</section>
+
+
+
+<!-- LYRIC VIDEO -->
+
+<section id="videoPage" class="hidden">
+
+  <div class="backgroundText">
+    SORRY
+  </div>
+
+
+  <div class="lyrics">
+
+    <div id="lyric" class="lyric"></div>
+
+  </div>
+
+
+  <div class="music">
+    ♪ playing...
+  </div>
+
+</section>
+
+
+
+<script>
+
+
+const openPage =
+document.getElementById("openPage");
+
+const letterPage =
+document.getElementById("letterPage");
+
+const videoPage =
+document.getElementById("videoPage");
+
+const lyric =
+document.getElementById("lyric");
+
+
+
+/* OPEN LETTER */
+
+function openLetter() {
+
+  openPage.style.opacity = "0";
+
+  setTimeout(function() {
+
+    openPage.classList.add("hidden");
+
+    letterPage.classList.remove("hidden");
+
+    setTimeout(function() {
+
+      letterPage.style.opacity = "1";
+
+    }, 50);
+
+  }, 700);
+
+}
+
+
+
+/* START VIDEO */
+
+function startVideo() {
+
+  letterPage.style.opacity = "0";
+
+  setTimeout(function() {
+
+    letterPage.classList.add("hidden");
+
+    videoPage.classList.remove("hidden");
+
+    setTimeout(function() {
+
+      videoPage.style.opacity = "1";
+
+      startLyrics();
+
+    }, 100);
+
+  }, 800);
+
+}
+
+
+
+/*
+  PLACEHOLDER LINES
+
+  Replace these with lyrics/text
+  that you are allowed to use.
+*/
+
+const lines = [
+
+  "YOUR FIRST LINE",
+
+  "YOUR SECOND LINE",
+
+  "YOUR THIRD LINE",
+
+  "YOUR FOURTH LINE",
+
+  "YOUR FIFTH LINE",
+
+  "YOUR LAST LINE"
+
+];
+
+
+let current = 0;
+
+
+
+function startLyrics() {
+
+  showLyric();
+
+}
+
+
+
+function showLyric() {
+
+  lyric.className = "lyric";
+
+  lyric.innerText = lines[current];
+
+
+  /*
+    Different animation
+    for every line
+  */
+
+  if (current % 3 === 0) {
+
+    lyric.classList.add("fade");
+
+  }
+
+  else if (current % 3 === 1) {
+
+    lyric.classList.add("slide");
+
+  }
+
+  else {
+
+    lyric.classList.add("zoom");
+
+  }
+
+
+  current++;
+
+
+  if (current >= lines.length) {
+
+    current = 0;
+
+  }
+
+
+  /*
+    Change line every 3 seconds
+  */
+
+  setTimeout(function() {
+
+    showLyric();
+
+  }, 3000);
+
+}
+
+
+</script>
+
+</body>
+</html>
